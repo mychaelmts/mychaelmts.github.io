@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat com URL Simples</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="url-input" placeholder="Escolha uma URL">
+        <button onclick="changeURL()">Mudar URL</button>
+    </div>
+
+    <div>
+        <input type="text" id="nick-input" placeholder="Seu Nick">
+        <textarea id="message-input" placeholder="Digite sua mensagem..." rows="5" onkeydown="handleKeyPress(event)"></textarea>
+        <button onclick="sendMessage()">Enviar</button>
+        <div id="message-box" style="border: 1px solid #ccc; padding: 10px; margin-top: 10px; height: 200px; overflow-y: scroll;"></div>
+    </div>
+
+    <script>
+        function changeURL() {
+            const urlInput = document.getElementById("url-input");
+
+            const url = urlInput.value.trim();
+
+            if (url === "") {
+                alert("Por favor, escolha uma URL.");
+                return;
+            }
+
+            window.location.hash = url;
+        }
+
+        function sendMessage() {
+            const nickInput = document.getElementById("nick-input");
+            const messageInput = document.getElementById("message-input");
+            const messageBox = document.getElementById("message-box");
+
+            const nick = nickInput.value;
+            const messageContent = messageInput.value;
+
+            if (nick.trim() === "") {
+                alert("Por favor, digite seu nick!");
+                return;
+            }
+
+            if (messageContent.trim() !== "") {
+                const currentDate = new Date();
+                const timestamp = currentDate.toLocaleString();
+
+                const message = {
+                    sender: nick,
+                    content: messageContent,
+                    timestamp: timestamp
+                };
+
+                const senderStyle = "color: red; font-weight: bold; font-style: italic;";
+                const timestampStyle = "color: red;";
+
+                messageBox.innerHTML += `<p><span style="${senderStyle}">${message.sender}</span> <span style="${timestampStyle}">(${message.timestamp})</span></p><p>${message.content}</p>`;
+                messageInput.value = "";
+
+                messageBox.scrollTop = messageBox.scrollHeight;
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                sendMessage();
+                event.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>
